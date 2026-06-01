@@ -1,0 +1,5 @@
+openpyxl
+#csv
+#os
+pandas
+pdfplumber

@@ -1,6 +1,5 @@
 # ============================================================
 #  function/pdf_reader.py — Đọc & parse file PDF
-#  Không phụ thuộc vào bất kỳ thành phần UI nào
 # ============================================================
 
 import os
@@ -9,76 +8,56 @@ from pathlib import Path
 
 import pdfplumber
 
-from config import INVOICE_PAGE_MARKER, FIELD_PATTERNS
+from config import FIELD_PATTERNS, INVOICE_PAGE_MARKER
 
 
-def find_pdf_files(target: str) -> list[str]:
-    """
-    Tìm và trả về danh sách đường dẫn file PDF từ một nguồn duy nhất.
-    - Nếu 'target' là một file .pdf cụ thể: trả về list chứa file đó.
-    - Nếu 'target' là một thư mục: quét và trả về tất cả file .pdf bên trong.
-    """
-    target_path = Path(target)
-    if not target_path.exists():
+def find_pdf_files(folder: str) -> list[str]:
+    """Tất cả file .pdf trong thư mục (không đệ quy)."""
+    p = Path(folder)
+    if not p.exists():
         return []
+    return sorted(str(f) for f in p.glob("*.pdf"))
 
-    # Trường hợp 1: Người dùng chọn đích danh một file PDF cụ thể
-    if target_path.is_file():
-        if target_path.suffix.lower() == ".pdf":
-            return [str(target_path.resolve())]
-        return []
 
-    # Trường hợp 2: Người dùng chọn một thư mục chứa các file PDF
-    if target_path.is_dir():
-        return sorted(str(p.resolve()) for p in target_path.glob("*.pdf"))
-
-    return []
-def get_specific_pdf(file_path: str) -> list[str]:
+def search_pdf_by_names(folder: str, names: list[str]) -> dict[str, list[str]]:
     """
-    HÀNH ĐỘNG 2: Chọn cụ thể một file.
-    Kiểm tra file có tồn tại và đúng định dạng PDF không.
-    Trả về list chứa 1 đường dẫn duy nhất để đồng bộ dữ liệu với hàm quét thư mục.
+    Tìm file PDF trong folder khớp với danh sách tên/từ khóa.
+    Hỗ trợ tên chính xác và từ khóa một phần (case-insensitive).
+    Trả về { tên_tìm: [đường_dẫn_file, ...] }
     """
-    path = Path(file_path)
-    if path.exists() and path.is_file() and path.suffix.lower() == ".pdf":
-        return [str(path.resolve())]
-    return []
+    all_pdfs = find_pdf_files(folder)
+    results: dict[str, list[str]] = {}
+    for name in names:
+        name = name.strip()
+        if not name:
+            continue
+        keyword = name.lower().removesuffix(".pdf")
+        matched = [
+            p for p in all_pdfs
+            if keyword in os.path.basename(p).lower().removesuffix(".pdf")
+        ]
+        results[name] = matched
+    return results
 
 
 def _is_invoice_page(text: str) -> bool:
-    """
-    Trả về True nếu đây là trang Commercial Invoice.
-    Dựa vào dòng đầu tiên của text có bắt đầu bằng INVOICE_PAGE_MARKER.
-    """
     if not text:
         return False
-    first_line = text.strip().split("\n")[0].strip()
-    return first_line.startswith(INVOICE_PAGE_MARKER)
+    return text.strip().split("\n")[0].strip().startswith(INVOICE_PAGE_MARKER)
 
 
 def _parse_fields(text: str) -> dict[str, str]:
-    """
-    Áp dụng các regex trong FIELD_PATTERNS lên text,
-    trả về dict {tên_trường: giá_trị}.
-    """
     result: dict[str, str] = {}
     for field, pattern in FIELD_PATTERNS.items():
-        match = re.search(pattern, text)
-        result[field] = match.group(1).strip() if match else ""
+        m = re.search(pattern, text)
+        result[field] = m.group(1).strip() if m else ""
     return result
 
 
 def extract_from_pdf(pdf_path: str) -> dict | None:
     """
-    Mở file PDF, duyệt từng trang, tìm trang Commercial Invoice đầu tiên,
-    rồi trích xuất các trường dữ liệu.
-
-    Trả về:
-        dict  — nếu tìm được trang CI và parse thành công
-                {"File": ..., "Invoice Date": ..., ...}
-        dict  — nếu có lỗi đọc file
-                {"File": ..., "error": "..."}
-        None  — nếu không có trang CI trong file
+    Trả về dict các trường từ trang Commercial Invoice,
+    {"File": ..., "error": ...} nếu lỗi, hoặc None nếu không có trang CI.
     """
     filename = os.path.basename(pdf_path)
     try:
@@ -88,7 +67,8 @@ def extract_from_pdf(pdf_path: str) -> dict | None:
                 if _is_invoice_page(text):
                     fields = _parse_fields(text)
                     fields["File"] = filename
+                    fields["_path"] = pdf_path
                     return fields
     except Exception as exc:
-        return {"File": filename, "error": str(exc)}
+        return {"File": filename, "error": str(exc), "_path": pdf_path}
     return None

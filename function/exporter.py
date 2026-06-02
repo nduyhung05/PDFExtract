@@ -1,3 +1,8 @@
+# ============================================================
+#  function/exporter.py — Xuất dữ liệu ra CSV và Excel
+#  Không phụ thuộc vào bất kỳ thành phần UI nào
+# ============================================================
+
 import csv
 
 import openpyxl

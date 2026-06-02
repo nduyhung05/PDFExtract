@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6e70abc-5367-48c9-b34b-c6f854c98caa" name="Changes" comment="feat: update new feature add multiple files">
-      <change afterPath="$PROJECT_DIR$/.idea/PDFExtract.iml" afterDir="false" />
+    <list default="true" id="a6e70abc-5367-48c9-b34b-c6f854c98caa" name="Changes" comment="feat: removed Status column">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/function/pdf_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/function/pdf_reader.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +109,31 @@
       <option name="project" value="LOCAL" />
       <updated>1780364283328</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="docs: update README.md">
+      <option name="closed" value="true" />
+      <created>1780364308524</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1780364308524</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat:">
+      <option name="closed" value="true" />
+      <created>1780364320008</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1780364320008</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: removed Status column">
+      <option name="closed" value="true" />
+      <created>1780382240112</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1780382240112</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -128,6 +151,9 @@
     <MESSAGE value="Initial commit" />
     <MESSAGE value="docs: add README.md" />
     <MESSAGE value="feat: update new feature add multiple files" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: update new feature add multiple files" />
+    <MESSAGE value="docs: update README.md" />
+    <MESSAGE value="feat:" />
+    <MESSAGE value="feat: removed Status column" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: removed Status column" />
   </component>
 </project>

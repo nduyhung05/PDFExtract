@@ -4,7 +4,7 @@
 
 from pathlib import Path
 
-DEFAULT_PDF_FOLDER    = str(Path.home())
+DEFAULT_PDF_FOLDER    = r"\\stffnp03\SFDATA_2024\28. SHP\1. EXPORT\08. UA\SHIPPING DOC"
 DEFAULT_OUTPUT_FOLDER = str(Path.home() / "Desktop")
 OUTPUT_CSV_NAME       = "invoice_data.csv"
 OUTPUT_XLSX_NAME      = "invoice_data.xlsx"

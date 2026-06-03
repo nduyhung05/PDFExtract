@@ -47,6 +47,7 @@ def save_excel(data: list[dict], output_path: str) -> None:
     fill_even = PatternFill("solid", start_color=EXCEL_ROW_EVEN, end_color=EXCEL_ROW_EVEN)
     fill_odd  = PatternFill("solid", start_color=EXCEL_ROW_ODD,  end_color=EXCEL_ROW_ODD)
 
+
     # ── Header row ───────────────────────────────────────────
     for col_idx, (header, width) in enumerate(zip(OUTPUT_COLUMNS, EXCEL_COL_WIDTHS), start=1):
         cell = ws.cell(row=1, column=col_idx, value=header)

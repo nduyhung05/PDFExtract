@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6e70abc-5367-48c9-b34b-c6f854c98caa" name="Changes" comment="feat: removed Status column">
+    <list default="true" id="a6e70abc-5367-48c9-b34b-c6f854c98caa" name="Changes" comment="feat: quick file select">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/function/pdf_reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/function/pdf_reader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/function/exporter.py" beforeDir="false" afterPath="$PROJECT_DIR$/function/exporter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/app.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +133,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780382240112</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="feat: quick file select">
+      <option name="closed" value="true" />
+      <created>1780382518240</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1780382518240</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -154,6 +162,7 @@
     <MESSAGE value="docs: update README.md" />
     <MESSAGE value="feat:" />
     <MESSAGE value="feat: removed Status column" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: removed Status column" />
+    <MESSAGE value="feat: quick file select" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: quick file select" />
   </component>
 </project>

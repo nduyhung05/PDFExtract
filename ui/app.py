@@ -28,7 +28,7 @@ class App(tk.Tk):
         super().__init__()
         self.title(APP_TITLE)
         self.geometry(APP_GEOMETRY)
-        self.minsize(880, 640)
+        self.minsize(1100, 840)
         self.resizable(True, True)
         self.configure(bg=COLOR_BG)
 
@@ -59,7 +59,7 @@ class App(tk.Tk):
         bar = tk.Frame(self, bg=COLOR_PRIMARY, height=52)
         bar.pack(fill="x")
         bar.pack_propagate(False)
-        tk.Label(bar, text="  Invoice Extractor",
+        tk.Label(bar, text="  PDF Extractor",
                  bg=COLOR_PRIMARY, fg="white", font=("Arial", 15, "bold"),
                  ).pack(side="left", padx=16, pady=10)
         tk.Label(bar, text="UA Shipping Doc",
@@ -71,7 +71,8 @@ class App(tk.Tk):
                               bg=COLOR_BG, font=("Arial", 10, "bold"), fg=COLOR_PRIMARY,
                               padx=8, pady=6)
         frame.grid(row=0, column=0, sticky="nsew", padx=(0, 6))
-        frame.rowconfigure(1, weight=1)
+        # Không cho hàng nào giãn theo chiều dọc (giữ chiều cao cố định)
+        frame.rowconfigure(1, weight=0)
         frame.columnconfigure(0, weight=1)
 
         folder_row = tk.Frame(frame, bg=COLOR_BG)
@@ -94,7 +95,8 @@ class App(tk.Tk):
             list_frame, font=("Courier", 9), selectmode=tk.EXTENDED,
             bg="white", fg="#1a1a1a",
             selectbackground=COLOR_PRIMARY, selectforeground="white",
-            activestyle="none", bd=1, relief="solid", highlightthickness=0)
+            activestyle="none", bd=1, relief="solid", highlightthickness=0,
+            height=12)  # <- Cố định chiều cao hiển thị 12 dòng, tránh đẩy các thành phần khác
         sb = ttk.Scrollbar(list_frame, orient="vertical", command=self.file_listbox.yview)
         self.file_listbox.configure(yscrollcommand=sb.set)
         self.file_listbox.grid(row=0, column=0, sticky="nsew")
@@ -139,7 +141,7 @@ class App(tk.Tk):
         self.name_input.configure(yscrollcommand=sb2.set)
         self.name_input.grid(row=0, column=0, sticky="nsew")
         sb2.grid(row=0, column=1, sticky="ns")
-        self.name_input.insert("1.0", "VD:\nASN1034657\nASN1034658\n1034659")
+        self.name_input.insert("1.0", "VD:\nASN1234567\nASN7654321\n1234567")
         self._placeholder_active = True
         self.name_input.bind("<FocusIn>",  self._clear_placeholder)
         self.name_input.bind("<FocusOut>", self._restore_placeholder)
@@ -228,7 +230,7 @@ class App(tk.Tk):
     #  Placeholder
     # ════════════════════════════════════════════════════════
 
-    _PLACEHOLDER = "VD:\nASN1034657\nASN1034658\n1034659"
+    _PLACEHOLDER = "VD:\nASN1234657\nASN1234658\n1234651"
 
     def _clear_placeholder(self, _=None):
         if self._placeholder_active:
@@ -515,6 +517,35 @@ class App(tk.Tk):
         dialog.wait_window()
         return chosen
 
+    def _format_invoice_date(self, date_value: str) -> str:
+        if not date_value:
+            return ""
+        if not isinstance(date_value, str):
+            date_value = str(date_value)
+        date_value = date_value.strip()
+        if not date_value:
+            return ""
+
+        for fmt in (
+            "%d/%m/%Y", "%d-%m-%Y", "%d.%m.%Y",
+            "%Y-%m-%d", "%Y/%m/%d", "%Y.%m.%d",
+            "%m/%d/%Y",
+        ):
+            try:
+                return __import__("datetime").datetime.strptime(date_value, fmt).strftime("%d/%m/%Y")
+            except ValueError:
+                continue
+
+        digits = "".join(ch for ch in date_value if ch.isdigit())
+        if len(digits) == 8:
+            for fmt in ("%d%m%Y", "%Y%m%d"):
+                try:
+                    return __import__("datetime").datetime.strptime(digits, fmt).strftime("%d/%m/%Y")
+                except ValueError:
+                    continue
+
+        return date_value
+
     def _process_worker(self, paths: list[str]):
         total = len(paths)
         self.after(0, lambda: self._set_status(f"Dang xu ly {total} file..."))
@@ -534,6 +565,9 @@ class App(tk.Tk):
                        self._set_status(f"[{i}/{t}]  {n}"))
             record = extract_from_pdf(path)
             if record:
+                invoice_date = record.get("Invoice Date")
+                if invoice_date:
+                    record["Invoice Date"] = self._format_invoice_date(invoice_date)
                 new_results.append(record)
                 row_idx = len(self._results) + len(new_results)
                 self.after(0, lambda r=record, i=row_idx: self._append_row(r, i))

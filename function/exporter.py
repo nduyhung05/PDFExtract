@@ -15,7 +15,7 @@ from config import (
     EXCEL_ROW_ODD,
     OUTPUT_COLUMNS,
 )
-
+from datetime import datetime
 
 def save_csv(data: list[dict], output_path: str) -> None:
     """Ghi danh sách record ra file CSV (UTF-8 BOM để Excel mở đúng tiếng Việt)."""
@@ -62,7 +62,19 @@ def save_excel(data: list[dict], output_path: str) -> None:
     for row_idx, record in enumerate(data, start=2):
         fill = fill_even if row_idx % 2 == 0 else fill_odd
         for col_idx, col_name in enumerate(OUTPUT_COLUMNS, start=1):
-            cell = ws.cell(row=row_idx, column=col_idx, value=record.get(col_name, ""))
+            value = record.get(col_name, "")
+
+            # Format riêng cho cột Invoice Date
+            if col_name == "Invoice Date" and value:
+                try:
+                    value = datetime.strptime(str(value), "%d/%m/%Y")
+                except ValueError:
+                    pass
+
+            cell = ws.cell(row=row_idx, column=col_idx, value=value)
+            if col_name == "Invoice Date" and isinstance(value, datetime):
+                cell.number_format = "DD/MM/YYYY"
+
             cell.fill      = fill
             cell.font      = row_font
             cell.border    = cell_border

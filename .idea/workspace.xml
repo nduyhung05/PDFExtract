@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6e70abc-5367-48c9-b34b-c6f854c98caa" name="Changes" comment="feat: quick file select">
+    <list default="true" id="a6e70abc-5367-48c9-b34b-c6f854c98caa" name="Changes" comment="feat: datetime format to dd/mm/yyy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/function/exporter.py" beforeDir="false" afterPath="$PROJECT_DIR$/function/exporter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ui/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/app.py" afterDir="false" />
@@ -62,6 +62,7 @@
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Code/STF-Tools/PDFExtract&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
 }</component>
@@ -141,7 +142,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780382518240</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="feat: datetime format to dd/mm/yyy">
+      <option name="closed" value="true" />
+      <created>1780449821764</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1780449821764</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -163,6 +172,7 @@
     <MESSAGE value="feat:" />
     <MESSAGE value="feat: removed Status column" />
     <MESSAGE value="feat: quick file select" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: quick file select" />
+    <MESSAGE value="feat: datetime format to dd/mm/yyy" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: datetime format to dd/mm/yyy" />
   </component>
 </project>

@@ -1,12 +1,12 @@
 # ============================================================
 #  ui/app.py — Giao diện chính v3
 # ============================================================
-
 import os
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
+from datetime import datetime
 from function.exporter import save_csv, save_excel
 from function.pdf_reader import (
     _priority_score,
@@ -19,7 +19,7 @@ from config import (
     COLOR_BTN_ORANGE, COLOR_BTN_RED, COLOR_PRIMARY,
     COLOR_ROW_ERROR, COLOR_ROW_EVEN,
     DEFAULT_OUTPUT_FOLDER, DEFAULT_PDF_FOLDER,
-    OUTPUT_COLUMNS, OUTPUT_CSV_NAME, OUTPUT_XLSX_NAME,
+    OUTPUT_COLUMNS, OUTPUT_XLSX_NAME,
 )
 
 
@@ -153,11 +153,6 @@ class App(tk.Tk):
                   bg=COLOR_BTN_BLUE, fg="white", font=("Arial", 9, "bold"),
                   relief="flat", cursor="hand2", padx=10, pady=5,
                   ).pack(fill="x")
-        self._search_result_var = tk.StringVar(value="")
-        tk.Label(frame, textvariable=self._search_result_var,
-                 bg=COLOR_BG, fg="#1F7A3E", font=("Arial", 8),
-                 wraplength=220, justify="left",
-                 ).grid(row=3, column=0, sticky="w", pady=(4, 0))
 
     def _build_result_table(self):
         frame = tk.LabelFrame(self, text="  Ket qua da xu ly  ",
@@ -355,7 +350,6 @@ class App(tk.Tk):
         if auto_picked: lines.append(f"Tu dong chon: {'; '.join(auto_picked)}")
         if not_found:   lines.append(f"Khong tim thay: {', '.join(not_found)}")
         summary = "  |  ".join(lines) if lines else "Khong co file nao duoc them."
-        self._search_result_var.set(summary)
         self._set_status("Tim kiem xong: " + summary)
 
     def _pick_from_multiple(self, keyword: str, matches: list[str]) -> list[str]:
@@ -520,29 +514,22 @@ class App(tk.Tk):
     def _format_invoice_date(self, date_value: str) -> str:
         if not date_value:
             return ""
-        if not isinstance(date_value, str):
-            date_value = str(date_value)
-        date_value = date_value.strip()
-        if not date_value:
-            return ""
+        date_value = str(date_value).strip()
 
-        for fmt in (
-            "%d/%m/%Y", "%d-%m-%Y", "%d.%m.%Y",
-            "%Y-%m-%d", "%Y/%m/%d", "%Y.%m.%d",
+        format = (
+            "%Y-%m-%d",
+            "%Y/%m/%d",
+            "%Y.%m.%d",
             "%m/%d/%Y",
-        ):
+            "%m-%d-%Y",
+            "%m.%d.%Y",
+        )
+        for fmt in format:
             try:
-                return __import__("datetime").datetime.strptime(date_value, fmt).strftime("%d/%m/%Y")
+                dt = datetime.strptime(date_value, fmt)
+                return dt.strftime("%d/%m/%Y")
             except ValueError:
                 continue
-
-        digits = "".join(ch for ch in date_value if ch.isdigit())
-        if len(digits) == 8:
-            for fmt in ("%d%m%Y", "%Y%m%d"):
-                try:
-                    return __import__("datetime").datetime.strptime(digits, fmt).strftime("%d/%m/%Y")
-                except ValueError:
-                    continue
 
         return date_value
 
@@ -616,14 +603,16 @@ class App(tk.Tk):
         output_dir = self.output_var.get().strip() or DEFAULT_OUTPUT_FOLDER
         os.makedirs(output_dir, exist_ok=True)
         export_data = [{k: v for k, v in r.items() if not k.startswith("_")} for r in clean]
-        csv_path  = os.path.join(output_dir, OUTPUT_CSV_NAME)
         xlsx_path = os.path.join(output_dir, OUTPUT_XLSX_NAME)
         try:
-            save_csv(export_data,  csv_path)
             save_excel(export_data, xlsx_path)
-            messagebox.showinfo("Xuat thanh cong",
-                f"Da luu {len(export_data)} dong:\n\nCSV:   {csv_path}\nExcel: {xlsx_path}")
-            self._set_status(f"Xuat xong {len(export_data)} dong -> {xlsx_path}")
+            messagebox.showinfo(
+                "Xuat thanh cong",
+                f"Da luu {len(export_data)} dong:\n\nExcel: {xlsx_path}"
+            )
+            self._set_status(
+                f"Xuat xong {len(export_data)} dong -> {xlsx_path}"
+            )
         except Exception as exc:
             messagebox.showerror("Loi xuat file", str(exc))
 
